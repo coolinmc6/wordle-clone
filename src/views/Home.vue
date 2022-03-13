@@ -172,6 +172,24 @@ export default defineComponent({
   }
 }
 
+@media screen and (max-width: 600px) {
+  .keyboard {
+    padding: 0px 1px;
+
+    .row {
+      .key {
+        width: 30px;
+        font-size: 14px;
+        margin: 3px;
+
+        &.wide {
+          width: 45px;
+        }
+      }
+    }
+  }
+}
+
 .button-bar {
   text-align: center;
 
