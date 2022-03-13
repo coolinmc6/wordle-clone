@@ -3120,7 +3120,6 @@ peeps
 sorer
 lolls
 prude
-diked
 floss
 flogs
 scums
@@ -3508,7 +3507,6 @@ penal
 obese
 sonny
 quirt
-mebbe
 tacit
 greek
 xenon
@@ -4329,7 +4327,6 @@ cager
 harpy
 oldie
 vivas
-admix
 codas
 zilch
 deist
@@ -5448,7 +5445,6 @@ urger
 kudzu
 paren
 bolos
-fetor
 nitty
 techy
 lieth
@@ -5765,3 +5761,9 @@ export const getMatches = (str, array = words) => {
 
   return possibleAnswers;
 };
+
+/**
+ * @param {string} word checks if word is in the list
+ * @returns {boolean} true if word is in the list
+ */
+export const isWord = (word) => words.includes(word);

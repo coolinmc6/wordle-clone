@@ -1,4 +1,4 @@
-import { getMatches } from '@/assets/five-word';
+import { getMatches, getRandomWord } from '@/assets/five-word';
 
 /**
  * Creates a new wordle grid
@@ -18,7 +18,7 @@ export default class Wordle {
    *  - resetting the hints
    *  - resetting the active guess, activeLetter, length, action, hash
    */
-  newGame(guesses, length, answer) {
+  newGame(guesses = 6, length = 5, answer = getRandomWord()) {
     this.grid = new Array(guesses)
       .fill('')
       .map(() => new Array(length).fill(''));
@@ -40,6 +40,10 @@ export default class Wordle {
     });
   }
 
+  /**
+   * a quick way to add letters to the wordle object
+   * @param {*} word the word to be added
+   */
   addGuess(word) {
     word.split('').map((letter) => this.addLetter(letter));
   }
@@ -50,6 +54,7 @@ export default class Wordle {
    * @param {string} _letter the letter to be added to the grid
    */
   addLetter(_letter) {
+    if (this.activeGuess > this.grid.length - 1) return;
     // if not a letter, return
     const letter = _letter.toLowerCase();
     if (!/^[a-z]+$/.test(letter)) return;
@@ -98,6 +103,12 @@ export default class Wordle {
     }, {});
   }
 
+  /**
+   * The letters object keeps track of letters that have been used already in the
+   * keyboard.
+   * @param {*} letter the letter you're looking for
+   * @returns the color for a particular letter on the keyboard
+   */
   getLetterClass(letter) {
     return this.letters[letter] || 'tbd';
   }
@@ -107,11 +118,10 @@ export default class Wordle {
    *   - green: correct letter in correct spot
    *   - yellow: correct letter, wrong spot
    *   - black: wrong letter
-   * @param { String } answer the correct answer that user is guessing
-   * @param { String } guess the user's guess
    * @return Array
    */
   letterHints() {
+    if (this.activeGuess > this.grid.length - 1) return [];
     const { answer } = this;
     const guess = this.grid[this.activeGuess].join('');
     // if (guess.length < this.length) return;
