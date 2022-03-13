@@ -32,6 +32,8 @@ export default defineComponent({
       }
     };
 
+    console.log(wordle.answer);
+
     const focusGameBoard = () => {
       refs.game.focus();
     };
