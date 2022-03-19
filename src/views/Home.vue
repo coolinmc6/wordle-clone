@@ -1,8 +1,10 @@
 <script>
-import { defineComponent, reactive, onMounted } from '@vue/composition-api';
+import {
+  computed, defineComponent, reactive, onMounted, ref,
+} from '@vue/composition-api';
 import Wordle from '@/views/helpers/wordle';
 import WordleTile from '@/components/WordleTile.vue';
-import { getRandomWord } from '@/assets/five-word';
+import { getRandomWord, isWord } from '@/assets/five-word';
 
 export default defineComponent({
   name: 'Home',
@@ -13,6 +15,8 @@ export default defineComponent({
     const wordle = reactive(
       new Wordle({ guesses: 6, length: 5, answer: getRandomWord() }),
     );
+    const gameOver = computed(() => wordle.gameOver);
+    const nonWord = ref(false);
     console.log(wordle);
     const handleKey = (event) => {
       const { keyCode } = event;
@@ -23,8 +27,15 @@ export default defineComponent({
           break;
         // Enter
         case 13:
+          const activeWord = wordle.getActiveWord(); // eslint-disable-line
+          if (!activeWord || !isWord(activeWord)) {
+            nonWord.value = true;
+            setTimeout(() => {
+              nonWord.value = false;
+            }, 500);
+            return;
+          }
           wordle.letterHints();
-          wordle.action += 1;
           break;
         default:
           wordle.addLetter(String.fromCharCode(keyCode));
@@ -77,6 +88,8 @@ export default defineComponent({
       keyboard,
       newGame,
       handleKeyboardPress,
+      gameOver,
+      nonWord,
     };
   },
 });
@@ -91,9 +104,11 @@ export default defineComponent({
           :key="`${letter}-${wordle.hints[rowIndex][letterIndex]}-${letterIndex}`"
           :letter="letter"
           :status="wordle.hints[rowIndex][letterIndex]"
+          :errored="wordle.activeGuess === rowIndex ? nonWord : false"
         />
       </div>
     </div>
+    <div class="answer" v-if="gameOver">{{wordle.answer}}</div>
     <div class="keyboard">
       <div class="row" v-for="(row, index) in keyboard" :key="index">
         <div

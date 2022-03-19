@@ -11,6 +11,10 @@ export default defineComponent({
       type: String,
       default: '',
     },
+    errored: {
+      type: Boolean,
+      default: false,
+    },
   },
   setup() {},
 });
@@ -25,6 +29,7 @@ export default defineComponent({
         'tile--green': status === 'green',
         'tile--black': status === 'black',
         'tile--yellow': status === 'yellow',
+        'errored': errored,
       },
     ]"
   >
@@ -136,6 +141,10 @@ export default defineComponent({
   &.tile--tbd {
     // background-color: blue;
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+
+    &.errored {
+      animation: wobble 0.5s;
+    }
   }
   &.tile--text {
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3);
@@ -164,6 +173,43 @@ export default defineComponent({
     height: 50px;
     font-size: 1.5rem;
     line-height: 1.5rem;
+  }
+}
+
+@keyframes wobble {
+  0% {
+    -webkit-transform: none;
+    transform: none;
+  }
+
+  15% {
+    -webkit-transform: translate3d(-25%, 0, 0) rotate3d(0, 0, 1, -5deg);
+    transform: translate3d(-25%, 0, 0) rotate3d(0, 0, 1, -5deg);
+  }
+
+  30% {
+    -webkit-transform: translate3d(20%, 0, 0) rotate3d(0, 0, 1, 3deg);
+    transform: translate3d(20%, 0, 0) rotate3d(0, 0, 1, 3deg);
+  }
+
+  45% {
+    -webkit-transform: translate3d(-15%, 0, 0) rotate3d(0, 0, 1, -3deg);
+    transform: translate3d(-15%, 0, 0) rotate3d(0, 0, 1, -3deg);
+  }
+
+  60% {
+    -webkit-transform: translate3d(10%, 0, 0) rotate3d(0, 0, 1, 2deg);
+    transform: translate3d(10%, 0, 0) rotate3d(0, 0, 1, 2deg);
+  }
+
+  75% {
+    -webkit-transform: translate3d(-5%, 0, 0) rotate3d(0, 0, 1, -1deg);
+    transform: translate3d(-5%, 0, 0) rotate3d(0, 0, 1, -1deg);
+  }
+
+  100% {
+    -webkit-transform: none;
+    transform: none;
   }
 }
 

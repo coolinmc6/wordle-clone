@@ -33,6 +33,7 @@ export default class Wordle {
     this.hash = this.constructor.getLetterMap(answer);
     this.action = 0;
     this.letters = {};
+    this.gameOver = false;
     this.gameHistory.push({
       guesses,
       length,
@@ -54,7 +55,7 @@ export default class Wordle {
    * @param {string} _letter the letter to be added to the grid
    */
   addLetter(_letter) {
-    if (this.activeGuess > this.grid.length - 1) return;
+    if (this.activeGuess > this.grid.length - 1 || this.gameOver) return;
     // if not a letter, return
     const letter = _letter.toLowerCase();
     if (!/^[a-z]+$/.test(letter)) return;
@@ -92,6 +93,15 @@ export default class Wordle {
     this.activeLetter -= 1;
   }
 
+  /**
+   *
+   * @returns {string} the word that is active
+   */
+  getActiveWord() {
+    const word = this.grid[this.activeGuess].join('');
+    return word.length === this.length ? word : false;
+  }
+
   static getLetterMap(word) {
     return word.split('').reduce((hash, letter, index) => {
       if (hash[letter]) {
@@ -121,7 +131,11 @@ export default class Wordle {
    * @return Array
    */
   letterHints() {
-    if (this.activeGuess > this.grid.length - 1) return [];
+    if (this.activeGuess > this.grid.length - 1
+      || this.gameOver
+      || this.grid[this.activeGuess].filter((d) => d === '').length
+    ) return [];
+    this.action += 1;
     const { answer } = this;
     const guess = this.grid[this.activeGuess].join('');
     // if (guess.length < this.length) return;
@@ -169,8 +183,17 @@ export default class Wordle {
       return null;
     });
 
+    if (finalHints.every((h) => h === 'green')) {
+      this.gameOver = true;
+    }
+
     this.activeGuess += 1;
     this.activeLetter = 0;
+
+    if (this.activeGuess === this.grid.length) {
+      this.gameOver = true;
+    }
+
     return finalHints;
   }
 
