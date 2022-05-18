@@ -15,14 +15,28 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    type: {
+      type: String,
+      default: 'wordle',
+    },
+    // if this tile is part of an active guess
+    activeGuess: {
+      type: Boolean,
+      default: false,
+    },
+    afterActive: {
+      type: Boolean,
+      default: false,
+    },
   },
   setup() {},
 });
 </script>
 <template>
   <div
+    @click="$emit('click')"
     :class="[
-      'tile',
+      'tile', `${type}-tile`,
       {
         'tile--tbd': status === 'tbd',
         'tile--text': letter !== '',
@@ -30,6 +44,8 @@ export default defineComponent({
         'tile--black': status === 'black',
         'tile--yellow': status === 'yellow',
         'errored': errored,
+        'tile-active': activeGuess,
+        'tile-after-active': afterActive,
       },
     ]"
   >
@@ -120,13 +136,12 @@ export default defineComponent({
     transform: rotateX(0);
   }
 }
-
 .tile {
-  width: 62px;
-  height: 62px;
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  margin: 5px;
   font-size: 2rem;
   line-height: 2rem;
   font-weight: bold;
@@ -135,8 +150,11 @@ export default defineComponent({
   color: black;
   text-transform: uppercase;
   user-select: none;
-  margin: 5px;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.wordle-tile {
+  width: 62px;
+  height: 62px;
 
   &.tile--tbd {
     // background-color: blue;
@@ -167,12 +185,114 @@ export default defineComponent({
   }
 }
 
+.quordle-tile {
+  width: 48px;
+  height: 26px;
+  font-size: 21px;
+  font-weight: normal;
+  color: black;
+  margin: 2px;
+  transition: 0.5s ease-in;
+  &.tile--tbd {
+    // background-color: blue;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+
+    &.errored {
+      animation: wobble 0.5s;
+    }
+  }
+  &.tile--text {
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3);
+    // animation: Pop 0.3s;
+  }
+  &.tile--green, &.tile--black, &.tile--yellow {
+    border-radius: 4px;
+    box-shadow: none;
+  }
+  &.tile--green {
+    background-color: rgb(0, 204, 136);
+    animation-name: FlipIn, FlipOut;
+    animation-duration: 0.5s, 0.5s;
+    animation-delay: 0s, 0.5s;
+  }
+  &.tile--black {
+    background-color: rgb(229, 231, 235);
+  }
+  &.tile--yellow {
+    background-color: rgb(255, 204, 0);
+  }
+  &.tile-active {
+    font-size: 30px;
+    height: 48px;
+    background-color: rgb(209, 213, 219);
+    border-radius: 4px;
+    box-shadow: none;
+    margin-bottom: 5px;
+    transition: 0.2s ease-in;
+  }
+  &.tile-after-active {
+    margin: 0;
+    width: 52px;
+    background-color: #f3f4f6;
+    box-shadow: none;
+    margin-bottom: 5px;
+    &:first-child {
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+    }
+    &:last-child {
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+    }
+  }
+}
+
+.trainer-tile {
+  width: 62px;
+  height: 62px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3);
+
+  &.tile--tbd {
+    // background-color: blue;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+  }
+  &.tile--tbd {
+    // background-color: blue;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+  }
+  &.tile--text {
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3);
+    // animation: Pop 0.3s;
+  }
+  &.tile--green {
+    background-color: #538d4e;
+    color: white;
+  }
+  &.tile--black {
+    background-color: #999;
+    color: white;
+  }
+  &.tile--yellow {
+    background-color: #c9b458;
+    color: white;
+  }
+}
+
 @media screen and (max-width: 550px) {
   .tile {
     width: 50px;
     height: 50px;
     font-size: 1.5rem;
     line-height: 1.5rem;
+  }
+  .quordle-tile {
+    height: 41px;
+    width: 41px;
+
+    &.tile-after-active {
+      width: 44px;
+      height: 24px;
+    }
   }
 }
 

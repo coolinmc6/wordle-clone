@@ -108,7 +108,7 @@ export default defineComponent({
         />
       </div>
     </div>
-    <div class="answer" v-if="gameOver">{{wordle.answer}}</div>
+    <div class="answer" v-if="gameOver">ANSWER: {{wordle.answer}}</div>
     <div class="keyboard">
       <div class="row" v-for="(row, index) in keyboard" :key="index">
         <div
@@ -139,7 +139,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .home {
-  height: 100vh;
+  height: calc(100vh - 50px);
   width: 100%;
   &:focus {
     outline: none;
@@ -185,6 +185,15 @@ export default defineComponent({
       }
     }
   }
+}
+
+.answer {
+  text-align: center;
+  font-size: 20px;
+  padding: 10px;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 @media screen and (max-width: 600px) {

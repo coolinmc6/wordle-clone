@@ -4475,7 +4475,6 @@ jives
 slims
 batik
 pings
-sonly
 leggo
 pekoe
 prawn
@@ -5743,12 +5742,29 @@ pupal
 export const getRandomWord = () => words[Math.floor(Math.random() * words.length)];
 
 /**
+ * Returns an array of unique words
+ * @param {*} num the number of words to return
+ */
+export const getUniqueWords = (num = 4) => {
+  const wordsList = [];
+  while (wordsList.length < num) {
+    const word = getRandomWord();
+    if (!wordsList.includes(word)) {
+      wordsList.push(word);
+    }
+  }
+  return wordsList;
+};
+
+/**
  *
  * @param {*} str Regex string to look for in the word
  * @returns an array of possible words that match the regex
  */
 export const getMatches = (str, array = words) => {
   const possibleAnswers = [];
+
+  // console.log(words);
 
   array.map((word) => {
     if (new RegExp(str).test(word)) {
@@ -5759,6 +5775,10 @@ export const getMatches = (str, array = words) => {
 
   return possibleAnswers;
 };
+
+export const getRegexMatches = (str, array = words) => array.filter((word) => new RegExp(str).test(word)); // eslint-disable-line
+
+export const getLetterMatches = (letterArray, array = words) => array.filter((word) => letterArray.every((letter) => word.includes(letter))); // eslint-disable-line
 
 /**
  * @param {string} word checks if word is in the list

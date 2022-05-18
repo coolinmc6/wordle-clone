@@ -1,14 +1,17 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from '../views/Home.vue';
+
+import Quordle from '../views/Quordle.vue';
+import Trainer from '../views/Trainer.vue';
+import Wordle from '../views/Wordle.vue';
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home,
+    name: 'Wordle',
+    component: Wordle,
   },
   {
     path: '/about',
@@ -17,6 +20,16 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
+  },
+  {
+    path: '/quordle',
+    name: 'Quordle',
+    component: Quordle,
+  },
+  {
+    path: '/trainer',
+    name: 'Trainer',
+    component: Trainer,
   },
 ];
 
